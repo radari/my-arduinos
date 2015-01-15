@@ -1,6 +1,8 @@
 // Example 01 : Blinking LED
 const unsigned int LED = 13; // LED connected to digital pin 13
-const unsigned int PAUSE = 3000; // 3 seconds
+const unsigned int TIME_ON = 1000; // 1 seconds
+const unsigned int TIME_OFF = 5000; // 5 seconds
+
 
 void setup()
 {
@@ -10,8 +12,8 @@ void setup()
 void loop()
 {
   digitalWrite(LED, HIGH);  // turns the LED on
-  delay(PAUSE);              // waits for some seconds
+  delay(TIME_ON);              // waits for some seconds
   digitalWrite(LED, LOW);   // turns the LED off
-  delay(PAUSE);
+  delay(TIME_OFF);
 }
 
