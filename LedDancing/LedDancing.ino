@@ -4,9 +4,7 @@ const unsigned int LED_2 = 6;
 const unsigned int LED_3 = 9;
 const unsigned int LED_4 = 11;
 
-const unsigned int TIMES = 2;
-const unsigned int ONE = 100;
-const unsigned int BOTH = 10;
+const unsigned int WAITING = 100;
 
 void setup() {
   
@@ -18,33 +16,15 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(LED_1, HIGH);
-  delay(ONE);
-  digitalWrite(LED_2, HIGH);
-  delay(BOTH);
-  digitalWrite(LED_1, LOW);
-  delay(ONE);
-  digitalWrite(LED_3, HIGH);
-  delay(BOTH);
-  digitalWrite(LED_2, LOW);
-  delay(ONE);
-  digitalWrite(LED_4, HIGH);
-  delay(BOTH);
-  digitalWrite(LED_3, LOW);
-  delay(ONE);
-  digitalWrite(LED_3, HIGH);
-  delay(BOTH);
-  digitalWrite(LED_4, LOW);
-  delay(ONE);
-  digitalWrite(LED_2, HIGH);
-  delay(BOTH);
-  digitalWrite(LED_3, LOW);
-  delay(ONE);
-  digitalWrite(LED_1, HIGH);
-  delay(BOTH);
-  digitalWrite(LED_2, LOW);
-  delay(ONE);
-  digitalWrite(LED_1, LOW);
+  for(int number = B0001; number <= B1000; number = number<<1) {
+    digitalWrite(LED_1, number & B0001);
+    digitalWrite(LED_2, number & B0010);
+    digitalWrite(LED_3, number & B0100);
+    digitalWrite(LED_4, number & B1000);
+    delay(WAITING)
+  }
 }
+
+
 
 
