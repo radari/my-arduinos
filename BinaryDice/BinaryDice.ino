@@ -6,6 +6,9 @@ const unsigned int BUTTON_PIN = 7;
 
 const unsigned int TIME_OFF = 3000; // 3 seconds
 
+// Serial comm
+const unsigned int BAUD_RATE = 9600;
+
 void setup() {
   pinMode(13, OUTPUT);
   
@@ -15,6 +18,9 @@ void setup() {
   pinMode(BUTTON_PIN, INPUT);
   
   randomSeed(analogRead(A0));
+  
+  // Serial comm
+  Serial.begin(BAUD_RATE);
 }
 
 int current_value = 0;
@@ -30,6 +36,8 @@ void loop() {
 }
 
 void output_result(const long result) {
+  Serial.println(result);
+  
   digitalWrite(LED_BIT0, result & B001);
   digitalWrite(LED_BIT1, result & B010);
   digitalWrite(LED_BIT2, result & B100);
