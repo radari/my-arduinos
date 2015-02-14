@@ -10,6 +10,10 @@ const unsigned int BAUD_RATE = 9600;
 const unsigned int FAR_AWAY_MIN_CM = 100;
 const unsigned int VERY_CLOSE_MAX_CM = 50;
 
+const float MICROSECONDS_PER_CM = 29.155;
+const float MOUNTING_GAP = 0.2;
+const float SENSOR_OFFSET = MOUNTING_GAP * MICROSECONDS_PER_CM * 2;
+
 
 void setup() {
   // Needed to turn off pin 13 LED
@@ -26,9 +30,23 @@ void setup() {
 }
 
 void loop() {
-  // Turn off LEDs
-  turn_off_leds();
+
+  const unsigned long duration = measure_distance();
+  float cm = 0;
   
+  if (duration == 0) {
+    cm = 0;
+    Serial.println("Warning: We did not get a pulse from sensor.");
+  } else {
+    cm = microseconds_to_cm(duration);
+    select_led(cm);
+    output_distance(cm);
+  }
+  
+  delay(500);
+}
+
+const unsigned long measure_distance() {
   // The sensor is triggered by a HIGH pulse of 10 or more microseconds.
   // Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
   digitalWrite(TRIG_PIN, LOW);
@@ -37,49 +55,32 @@ void loop() {
   delayMicroseconds(10);
   digitalWrite(TRIG_PIN, LOW);
   
-  const unsigned long duration = pulseIn(ECHO_PIN, HIGH);
-  unsigned long cm = 0;
+  return pulseIn(ECHO_PIN, HIGH);
+}
+
+const float microseconds_to_cm(const unsigned long microseconds) {
+  const float net_distance = max(0, microseconds - SENSOR_OFFSET);
+  return net_distance / MICROSECONDS_PER_CM / 2;
+}
+
+void select_led(const float cm) {
+  int result = B000;
   
-  if (duration == 0) {
-    cm = 0;
-    Serial.println("Warning: We did not get a pulse from sensor.");
-  } else {
-    cm = microseconds_to_cm(duration);
-    select_led(cm);
-    Serial.print("Distance to nearest object: ");
-    Serial.print(cm);
-    Serial.println(" cm");
-    Serial.print(microseconds_to_inches(duration));
-    Serial.println(" in");
-  }
-  
-  delay(500);
-}
-
-unsigned long microseconds_to_inches(const unsigned long microseconds) {
-  return microseconds / 74 / 2;
-}
-
-
-unsigned long microseconds_to_cm(const unsigned long microseconds) {
-  // The speed of sound is 340 m/s or 29 microseconds per centimeter.
-  // The ping travels out and back, so to find the distance of the
-  // object we take half of the distance travelled.
-  return microseconds / 29 / 2;
-}
-
-void turn_off_leds() {
-  digitalWrite(GREEN_PIN, LOW);
-  digitalWrite(YELLOW_PIN, LOW);
-  digitalWrite(RED_PIN, LOW);
-}
-
-void select_led(const unsigned long cm) {
   if (cm >= FAR_AWAY_MIN_CM) {
-    digitalWrite(GREEN_PIN, HIGH);
+    result = B100;
   } else if (cm >= VERY_CLOSE_MAX_CM) {
-    digitalWrite(YELLOW_PIN, HIGH);
+    result = B010;
   } else {
-    digitalWrite(RED_PIN, HIGH);
+    result = B001;
   }
+  
+  digitalWrite(RED_PIN, result & B001);
+  digitalWrite(YELLOW_PIN, result & B010);
+  digitalWrite(GREEN_PIN, result & B100);
+}
+
+void output_distance(const float cm) {
+  Serial.print("Distance to nearest object: ");
+  Serial.print(cm);
+  Serial.println(" cm");
 }
