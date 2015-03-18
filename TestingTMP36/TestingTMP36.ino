@@ -15,6 +15,8 @@ void loop() {
 
 const float get_temperature() {
   const int sensor_voltage = analogRead(TEMP_SENSOR_PIN);
+  Serial.print("lectura: ");
+  Serial.println(sensor_voltage);
   const float voltage = sensor_voltage * SUPPLY_VOLTAGE / 1024;
   return (voltage * 1000 - 500) / 10;
 }
