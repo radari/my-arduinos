@@ -6,6 +6,9 @@ const int cosinePeriod = (int) (360.0 * 1 / cosinePrecision);
 
 
 void setup() {
+  // It's to turn integrated led off. 
+  pinMode(13, OUTPUT);
+  
   initCosineLUT();
 }
 
