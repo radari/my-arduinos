@@ -31,7 +31,7 @@ void loop() {
       switchesStates[i] = digitalRead(i+2); // We are starting from pin 2
       Serial.write(i);                      // 1st byte = switch number (0 to 2)
       Serial.write(switchesStates[i]);      // 2nd byte = the switch i state
-      delay(100);
+      delay(1000);
     }
   
   }
