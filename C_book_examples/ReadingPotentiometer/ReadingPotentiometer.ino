@@ -18,4 +18,6 @@ void loop() {
   Serial.print(potValue);
   Serial.print(" voltage: ");
   Serial.print(voltage);
+  
+  delay(2);    // this small break waits for the ADC to stabilize is often used
 }
