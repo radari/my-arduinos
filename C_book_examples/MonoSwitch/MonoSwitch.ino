@@ -1,5 +1,5 @@
-const int switchPin = 2;   // pin of the digital input related to the switch
-const int ledPin = 8;      // pin of the digital output related to the LED
+const int switchPin = 12;   // pin of the digital input related to the switch
+const int ledPin = 7;      // pin of the digital output related to the LED
 
 int switchState = 0;       // storage variable for current switch state
 
